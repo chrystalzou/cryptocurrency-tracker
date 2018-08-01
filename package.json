@@ -1,0 +1,25 @@
+{
+	"name": "fullstack-take-home-boilerplate",
+	"version": "0.1.0",
+	"private": true,
+	"proxy": "http://localhost:5000/",
+	"dependencies": {
+		"axios": "^0.18.0",
+		"body-parser": "^1.18.2",
+		"bulma": "^0.6.2",
+		"concurrently": "^3.5.1",
+		"cors": "^2.8.4",
+		"express": "^4.16.3",
+		"firebase": "^4.12.1",
+		"nodemon": "^1.17.3",
+		"react": "^16.3.1",
+		"react-dom": "^16.3.1",
+		"react-scripts": "1.1.4",
+		"socket.io": "^2.1.0"
+	},
+	"scripts": {
+		"client": "react-scripts start",
+		"server": "nodemon server/app.js",
+		"start": "concurrently --kill-others-on-fail \"npm:client\" \"npm:server\""
+	}
+}
