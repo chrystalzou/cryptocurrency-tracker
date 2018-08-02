@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import 'bulma/css/bulma.css'
 import './App.css'
-import CurrencySelector from './CurrencySelector.js'
+import CurrencyList from './CurrencyList.js'
 import CoinList from './CoinList.js'
 import axios from 'axios'
 
@@ -10,8 +10,8 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			coins: '', // returned from API
-			currencies: 'USD',
+			coins: '',
+			currencies: ['USD', 'EUR'],
 		}
 
 	}
@@ -21,6 +21,7 @@ class App extends Component {
 		.then((response) => {
 			this.setState({
 				coins: response.data,
+				currencies: this.state.currencies.concat(Object.keys(response.data)),
 			});
 		})
 		.catch((error) => {
@@ -45,7 +46,7 @@ class App extends Component {
 						<button>
 							Refresh
 						</button>
-						<CurrencySelector currencies={this.state.currencies}/>
+						<CurrencyList currencies={this.state.currencies}/>
 						<CoinList coins={this.state.coins}/>
 					</div>
 				</section>

@@ -1,9 +1,7 @@
 import React from 'react'
-import 'bulma/css/bulma.css'
-import './App.css'
 import CoinListEntry from './CoinListEntry.js'
 
-function CoinList(props){
+const CoinList = (props) => {
   return (
     <div>
       <div className="coin-header">
