@@ -1,1 +1,42 @@
 /* You can add additional styles here */
+button {
+  border: 2px solid #209cee;
+  color: #209cee;
+  padding: 5px 10px;
+  margin-right: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+select {
+  margin: 0px 10px;
+}
+
+.container {
+}
+
+.coin-header {
+  width: 100%;
+  display: flex;
+  clear: both;
+}
+
+.coin-data, .coin-entry {
+  display: flex;
+  width: 10%;
+  float: left;
+  flex-grow: 1;
+  border-bottom: 1px solid #d0d0d0;
+  padding: 3px 5px;
+}
+
+.coin-data {
+  font-weight: bold;
+}
+
+.currency-selector {
+  float: right;
+}
