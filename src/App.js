@@ -3,15 +3,29 @@ import 'bulma/css/bulma.css'
 import './App.css'
 import CurrencySelector from './CurrencySelector.js'
 import CoinList from './CoinList.js'
+import axios from 'axios'
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			coins: 'ethereum', // returned from API
+			coins: '', // returned from API
 			currencies: 'USD',
 		}
+
+	}
+
+	componentDidMount() {
+		axios.get('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD,EUR')
+		.then((response) => {
+			this.setState({
+				coins: response.data,
+			});
+		})
+		.catch((error) => {
+			console.log(error);
+		});
 	}
 
 	render() {
@@ -27,6 +41,9 @@ class App extends Component {
 						</button>
 						<button>
 							Remove
+						</button>
+						<button>
+							Refresh
 						</button>
 						<CurrencySelector currencies={this.state.currencies}/>
 						<CoinList coins={this.state.coins}/>
