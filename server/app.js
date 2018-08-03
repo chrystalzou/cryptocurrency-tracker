@@ -21,7 +21,7 @@ app.post(`/coins`, function (req, res) {
 
 // READ
 app.get('/coins', (req, res) => {
-  db.on("value", function(snapshot) {
+  db.once("value", function(snapshot) {
     res.json(snapshot.val());
   }, function (error) {
     console.log("Error: " + error.code);
