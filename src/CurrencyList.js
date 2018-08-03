@@ -1,8 +1,6 @@
 import React from 'react'
-import CurrencyListEntry from './CurrencyList.js'
 
 const CurrencyList = (props) => {
-  console.log(props.currencies);
   return (
     <div className="currency-selector">
       Currency: 
@@ -14,4 +12,3 @@ const CurrencyList = (props) => {
 }
 
 export default CurrencyList;
-
