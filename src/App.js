@@ -12,13 +12,18 @@ class App extends Component {
 		this.state = {
 			coins: '',
 			currencies: ['USD', 'EUR'],
-			value: '',
+			coinToAdd: '',
+			coinToDelete: '',
+			realTime: false,
+			intervalID: null,
 		}
 
-		this.handleChange = this.handleChange.bind(this);
+		this.handleCoinToAddChange = this.handleCoinToAddChange.bind(this);
+		this.handleCoinToDeleteChange = this.handleCoinToDeleteChange.bind(this);
 		this.handleAdd = this.handleAdd.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
 		this.handleRefresh = this.handleRefresh.bind(this);
+		this.toggleRealTime = this.toggleRealTime.bind(this);
 	}
 
 	componentDidMount() {
@@ -32,23 +37,24 @@ class App extends Component {
 					currencies: this.state.currencies.concat(Object.keys(response.data)),
 				});
 			})
-			.catch((error) => {
-				console.log(error);
-			})
 		})
 		.catch((error) => {
 			console.log(error);
 		});
 	}
 
-	handleChange(event) {
-		this.setState({value: event.target.value});
+	handleCoinToAddChange(event) {
+		this.setState({coinToAdd: event.target.value});
+	}
+
+	handleCoinToDeleteChange(event) {
+		this.setState({coinToDelete: event.target.value});
 	}
 
   handleAdd(event) {
 		let currentCoins = this.state.coins;
 		let currentCurrencies = this.state.currencies;
-		if (!this.state.currencies.includes(this.state.value)) {
+		if (!this.state.currencies.includes(this.state.coinToAdd)) {
 			axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${this.state.value}&tsyms=USD,EUR`)
 			.then((response) => {
 				if (response.data.Response === 'Error') {
@@ -87,7 +93,7 @@ class App extends Component {
 		let currentCurrencies = this.state.currencies;
 		if (this.state.value === 'BTC' || this.state.value === 'ETH') {
 			alert('Cannot delete BTC or ETH!');
-		} else if (currentCoins.hasOwnProperty(this.state.value)) {
+		} else if (currentCoins.hasOwnProperty(this.state.coinToDelete)) {
 			delete currentCoins[this.state.value];
 			currentCurrencies.splice(currentCurrencies.indexOf(this.state.value), 1);
 			this.setState({
@@ -126,6 +132,28 @@ class App extends Component {
 		});
 	}
 
+	toggleRealTime() {
+		new Promise((resolve, reject) => {
+			this.setState({
+				realTime: !this.state.realTime,
+			}, resolve);
+		})
+		.then(() => {
+			if (this.state.realTime === true) {
+				this.setState({
+					intervalID : window.setInterval(this.handleRefresh, 10000),
+				});
+			}
+			if (this.state.realTime === false) {
+				if (this.state.intervalID) {
+					window.clearInterval();
+				}
+			}
+		})
+		.catch((error) => {console.log(error)});
+		this.handleRefresh();
+	}
+
 	render() {
 		return (
 			<div>
@@ -139,7 +167,7 @@ class App extends Component {
 								<div className="coin-label">
 									Coin:
 								</div>
-								<input className="change-list" type="text" name="name" required pattern="[A-Z]{1,9}" title="You must use 1-9 uppercase letters" onChange={this.handleChange}/>
+								<input className="change-list" type="text" name="name" required pattern="[A-Z]{1,9}" title="You must use 1-9 uppercase letters" value={this.state.coinToAdd} onChange={this.handleCoinToAddChange}/>
 							</label>
 							<input className="change-list" type="submit" value="Add" />
 						</form>
@@ -148,7 +176,7 @@ class App extends Component {
 								<div className="coin-label">
 									Coin:
 								</div>
-								<input className="change-list" type="text" name="name" required pattern="[A-Z]{1,9}" title="You must use 1-9 uppercase letters" onChange={this.handleChange}/>
+								<input className="change-list" type="text" name="name" required pattern="[A-Z]{1,9}" title="You must use 1-9 uppercase letters" value={this.state.coinToDelete} onChange={this.handleCoinToDeleteChange}/>
 							</label>
 							<input className="change-list" type="submit" value="Delete" />
 						</form>
@@ -156,6 +184,10 @@ class App extends Component {
 							<button className="refresh" onClick={this.handleRefresh}>
 								Refresh
 							</button>
+							<label>
+								Real Time Updates:
+								<input name="realTime" type="checkbox" checked={this.state.realTime} onChange={this.toggleRealTime}/>
+							</label>
 							<CurrencyList currencies={this.state.currencies}/>
 						</div>
 						<CoinList coins={this.state.coins}/>
