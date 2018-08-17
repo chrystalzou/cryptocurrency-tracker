@@ -5,7 +5,7 @@ const CurrencyList = (props) => {
     <div className="currency-selector">
       Currency: 
       <select>
-        {props.currencies.map(currency => <option value={currency}>{currency}</option>)}
+        {props.currencies.map(currency => <option key={currency} value={currency}>{currency}</option>)}
       </select>
     </div>
   )

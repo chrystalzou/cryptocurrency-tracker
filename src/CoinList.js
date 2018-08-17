@@ -8,7 +8,7 @@ const CoinList = (props) => {
         <div className="coin-data">Coin</div>
         <div className="coin-data">Price</div>
       </div>
-        {Object.keys(props.coins).map(coin => <CoinListEntry coinName={coin} coinData={props.coins[coin]}/>)}
+        {Object.keys(props.coins).map(coin => <CoinListEntry key={coin} coinName={coin} coinData={props.coins[coin]}/>)}
     </div>
   )
 }
