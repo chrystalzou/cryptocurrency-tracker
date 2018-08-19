@@ -4,38 +4,53 @@ import './App.css'
 import CurrencyList from './CurrencyList.js'
 import CoinList from './CoinList.js'
 import axios from 'axios'
+import { runInThisContext } from 'vm';
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			coins: '',
-			currencies: ['USD', 'EUR'],
+			coins: [],
+			currencies: ['USD', 'EUR', 'CAD'],
 			coinToAdd: '',
 			coinToDelete: '',
+			coinToSearch: '',
+			filteredCoins: [],
 			realTime: false,
 			intervalID: null,
+			selectedCurrency: 'USD',
 		}
 
 		this.handleCoinToAddChange = this.handleCoinToAddChange.bind(this);
 		this.handleCoinToDeleteChange = this.handleCoinToDeleteChange.bind(this);
+		this.handleCoinToSearchChange = this.handleCoinToSearchChange.bind(this);
 		this.handleAdd = this.handleAdd.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
 		this.handleRefresh = this.handleRefresh.bind(this);
 		this.toggleRealTime = this.toggleRealTime.bind(this);
+		this.selectCurrency = this.selectCurrency.bind(this);
 	}
 
 	componentDidMount() {
 		axios.get('/coins')
 		.then((response) => {
 			let coins = Object.keys(response.data.coins).join(',');
-			axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${coins}&tsyms=USD,EUR`)
+			axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${coins}&tsyms=USD,EUR,CAD`)
 			.then((response) => {
+				let coinArray = [];
+				for (var i = 0; i < Object.keys(response.data).length; i++) {
+					let coin = {
+						name: Object.keys(response.data)[i],
+						data: response.data[Object.keys(response.data)[i]],
+					}
+					coinArray.push(coin);
+				}
 				this.setState({
-					coins: response.data,
+					coins: coinArray,
 					currencies: this.state.currencies.concat(Object.keys(response.data)),
-				});
+					filteredCoins: coinArray,
+				}, console.log(this.state.coins));
 			})
 		})
 		.catch((error) => {
@@ -49,6 +64,10 @@ class App extends Component {
 
 	handleCoinToDeleteChange(event) {
 		this.setState({coinToDelete: event.target.value});
+	}
+
+	handleCoinToSearchChange(event) {
+		this.handleSearch(event);
 	}
 
   handleAdd(event) {
@@ -132,6 +151,14 @@ class App extends Component {
 		});
 	}
 
+	handleSearch(event) {
+		console.log(this.state.coinToSearch);
+		this.setState({
+			coinToSearch: event.target.value,
+			filteredCoins: this.state.coins.filter((coin) => coin.name.includes(event.target.value)),
+		}, console.log(this.state.filteredCoins));
+	}
+
 	toggleRealTime() {
 		new Promise((resolve, reject) => {
 			this.setState({
@@ -152,6 +179,12 @@ class App extends Component {
 		})
 		.catch((error) => {console.log(error)});
 		this.handleRefresh();
+	}
+
+	selectCurrency(event) {
+		this.setState({
+			selectedCurrency: event.target.value
+		});
 	}
 
 	render() {
@@ -180,6 +213,13 @@ class App extends Component {
 							</label>
 							<input className="change-list" type="submit" value="Delete" />
 						</form>
+							<label>
+								<div className="coin-label">
+									Search:
+								</div>
+								<input className="change-list" type="text" name="name" required pattern="[A-Z]{1,9}" title="You must use 1-9 uppercase letters" value={this.state.coinToSearch} onChange={this.handleCoinToSearchChange}/>
+							</label>
+							<input className="change-list" type="submit" value="Search" />
 						<div className="right-div">
 							<button className="refresh" onClick={this.handleRefresh}>
 								Refresh
@@ -188,9 +228,9 @@ class App extends Component {
 								Real Time Updates:
 								<input name="realTime" type="checkbox" checked={this.state.realTime} onChange={this.toggleRealTime}/>
 							</label>
-							<CurrencyList currencies={this.state.currencies}/>
+							<CurrencyList currencies={this.state.currencies} onSelect={this.selectCurrency}/>
 						</div>
-						<CoinList coins={this.state.coins}/>
+						<CoinList coins={this.state.filteredCoins} selectedCurrency={this.state.selectedCurrency}/>
 					</div>
 				</section>
 			</div>

@@ -4,7 +4,7 @@ const CurrencyList = (props) => {
   return (
     <div className="currency-selector">
       Currency: 
-      <select>
+      <select onChange={props.onSelect}>
         {props.currencies.map(currency => <option key={currency} value={currency}>{currency}</option>)}
       </select>
     </div>
