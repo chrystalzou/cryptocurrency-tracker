@@ -11,6 +11,7 @@ class App extends Component {
 		super(props);
 
 		this.state = {
+<<<<<<< HEAD
 			coins: [],
 			currencies: ['USD', 'EUR', 'CAD'],
 			coinToAdd: '',
@@ -20,16 +21,30 @@ class App extends Component {
 			realTime: false,
 			intervalID: null,
 			selectedCurrency: 'USD',
+=======
+			coins: '',
+			currencies: ['USD', 'EUR'],
+			coinToAdd: '',
+			coinToDelete: '',
+			realTime: false,
+			intervalID: null,
+>>>>>>> 748918e61f031756ffa2d7353d3677134caa2cbe
 		}
 
 		this.handleCoinToAddChange = this.handleCoinToAddChange.bind(this);
 		this.handleCoinToDeleteChange = this.handleCoinToDeleteChange.bind(this);
+<<<<<<< HEAD
 		this.handleCoinToSearchChange = this.handleCoinToSearchChange.bind(this);
+=======
+>>>>>>> 748918e61f031756ffa2d7353d3677134caa2cbe
 		this.handleAdd = this.handleAdd.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
 		this.handleRefresh = this.handleRefresh.bind(this);
 		this.toggleRealTime = this.toggleRealTime.bind(this);
+<<<<<<< HEAD
 		this.selectCurrency = this.selectCurrency.bind(this);
+=======
+>>>>>>> 748918e61f031756ffa2d7353d3677134caa2cbe
 	}
 
 	componentDidMount() {
@@ -49,8 +64,12 @@ class App extends Component {
 				this.setState({
 					coins: coinArray,
 					currencies: this.state.currencies.concat(Object.keys(response.data)),
+<<<<<<< HEAD
 					filteredCoins: coinArray,
 				}, console.log(this.state.coins));
+=======
+				});
+>>>>>>> 748918e61f031756ffa2d7353d3677134caa2cbe
 			})
 		})
 		.catch((error) => {
@@ -64,10 +83,13 @@ class App extends Component {
 
 	handleCoinToDeleteChange(event) {
 		this.setState({coinToDelete: event.target.value});
+<<<<<<< HEAD
 	}
 
 	handleCoinToSearchChange(event) {
 		this.handleSearch(event);
+=======
+>>>>>>> 748918e61f031756ffa2d7353d3677134caa2cbe
 	}
 
   handleAdd(event) {
@@ -151,6 +173,7 @@ class App extends Component {
 		});
 	}
 
+<<<<<<< HEAD
 	handleSearch(event) {
 		console.log(this.state.coinToSearch);
 		this.setState({
@@ -159,6 +182,8 @@ class App extends Component {
 		}, console.log(this.state.filteredCoins));
 	}
 
+=======
+>>>>>>> 748918e61f031756ffa2d7353d3677134caa2cbe
 	toggleRealTime() {
 		new Promise((resolve, reject) => {
 			this.setState({
@@ -181,12 +206,15 @@ class App extends Component {
 		this.handleRefresh();
 	}
 
+<<<<<<< HEAD
 	selectCurrency(event) {
 		this.setState({
 			selectedCurrency: event.target.value
 		});
 	}
 
+=======
+>>>>>>> 748918e61f031756ffa2d7353d3677134caa2cbe
 	render() {
 		return (
 			<div>
@@ -228,7 +256,11 @@ class App extends Component {
 								Real Time Updates:
 								<input name="realTime" type="checkbox" checked={this.state.realTime} onChange={this.toggleRealTime}/>
 							</label>
+<<<<<<< HEAD
 							<CurrencyList currencies={this.state.currencies} onSelect={this.selectCurrency}/>
+=======
+							<CurrencyList currencies={this.state.currencies}/>
+>>>>>>> 748918e61f031756ffa2d7353d3677134caa2cbe
 						</div>
 						<CoinList coins={this.state.filteredCoins} selectedCurrency={this.state.selectedCurrency}/>
 					</div>
